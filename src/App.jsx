@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ProductCard from './components/ProductCard';
+import { initialProducts } from './data/initialProducts';
 
 function App() {
+  const [products, setProducts] = useState(initialProducts);
+
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-2xl font-bold text-slate-900">Manajemen Produk</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Kelola daftar produk dan harga dalam satu tempat.
-        </p>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+              Manajemen Produk
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Kelola daftar produk dan harga dalam satu tempat.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl shadow-sm transition-colors self-start sm:self-auto"
+          >
+            + Tambah Produk
+          </button>
+        </div>
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onEdit={() => {}}
+              onDelete={() => {}}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
