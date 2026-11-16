@@ -3,6 +3,7 @@ import ProductCard from './components/ProductCard';
 import SearchBar from './components/SearchBar';
 import AddProductModal from './components/AddProductModal';
 import EditProductModal from './components/EditProductModal';
+import DeleteProductModal from './components/DeleteProductModal';
 import { initialProducts } from './data/initialProducts';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [deletingProduct, setDeletingProduct] = useState(null);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -28,6 +30,10 @@ function App() {
     setProducts(
       products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
     );
+  };
+
+  const handleDeleteProduct = (productId) => {
+    setProducts(products.filter((p) => p.id !== productId));
   };
 
   return (
@@ -67,7 +73,7 @@ function App() {
                 key={product.id}
                 product={product}
                 onEdit={(item) => setEditingProduct(item)}
-                onDelete={() => {}}
+                onDelete={(item) => setDeletingProduct(item)}
               />
             ))}
           </div>
@@ -96,6 +102,13 @@ function App() {
           product={editingProduct}
           onClose={() => setEditingProduct(null)}
           onUpdateProduct={handleUpdateProduct}
+        />
+
+        <DeleteProductModal
+          isOpen={Boolean(deletingProduct)}
+          product={deletingProduct}
+          onClose={() => setDeletingProduct(null)}
+          onConfirmDelete={handleDeleteProduct}
         />
       </div>
     </div>
