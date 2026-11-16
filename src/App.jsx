@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import ProductCard from './components/ProductCard';
 import SearchBar from './components/SearchBar';
 import AddProductModal from './components/AddProductModal';
+import EditProductModal from './components/EditProductModal';
 import { initialProducts } from './data/initialProducts';
 
 function App() {
   const [products, setProducts] = useState(initialProducts);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -20,6 +22,12 @@ function App() {
       ...newProductData,
     };
     setProducts([...products, newProduct]);
+  };
+
+  const handleUpdateProduct = (updatedProduct) => {
+    setProducts(
+      products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+    );
   };
 
   return (
@@ -58,7 +66,7 @@ function App() {
               <ProductCard
                 key={product.id}
                 product={product}
-                onEdit={() => {}}
+                onEdit={(item) => setEditingProduct(item)}
                 onDelete={() => {}}
               />
             ))}
@@ -76,11 +84,18 @@ function App() {
           Menampilkan {filteredProducts.length} dari {products.length} produk
         </div>
 
-        {/* Add Modal */}
+        {/* Modals */}
         <AddProductModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAddProduct={handleAddProduct}
+        />
+
+        <EditProductModal
+          isOpen={Boolean(editingProduct)}
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+          onUpdateProduct={handleUpdateProduct}
         />
       </div>
     </div>
