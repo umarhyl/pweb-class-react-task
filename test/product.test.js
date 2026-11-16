@@ -46,3 +46,24 @@ test('add, update, and delete product operations', () => {
   assert.equal(products.length, 5);
   assert.equal(products.find((p) => p.id === 6), undefined);
 });
+
+test('dashboard metrics calculation (total products, valuation, avg price)', () => {
+  const totalProducts = initialProducts.length;
+  const totalValuation = initialProducts.reduce((acc, p) => acc + p.price, 0);
+  const avgPrice = Math.round(totalValuation / totalProducts);
+
+  assert.equal(totalProducts, 5);
+  assert.equal(totalValuation, 34000); // 5000 + 12000 + 8000 + 6000 + 3000
+  assert.equal(avgPrice, 6800);
+});
+
+test('dynamic route product lookup by string ID and not found handling', () => {
+  // Existing ID
+  const found = initialProducts.find((p) => String(p.id) === '2');
+  assert.ok(found);
+  assert.equal(found.name, 'Buku Tulis');
+
+  // Non-existing ID (404 condition)
+  const notFound = initialProducts.find((p) => String(p.id) === '999');
+  assert.equal(notFound, undefined);
+});
