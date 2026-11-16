@@ -1,58 +1,100 @@
-# Manajemen Produk - Tugas 3 Pemrograman Web
+# Manajemen Produk - Tugas 4 Pemrograman Web
 
-Aplikasi web manajemen produk sederhana yang dibangun menggunakan **React (Vite)** dan **Tailwind CSS** untuk memenuhi Tugas 3 Pemrograman Web (Materi Week 12: Fundamental React).
+Aplikasi web manajemen produk berbasis **React 18**, **React Router v7**, dan **Tailwind CSS** yang terintegrasi dengan **Backend ExpressJS & Prisma ORM**, dikembangkan untuk memenuhi **Tugas 4 Pemrograman Web (Materi Week 13: React Router, Tailwind CSS, dan Integrasi Backend)**.
 
-## ✨ Fitur Utama
+---
 
-- **Daftar Produk Dinamis**: Menampilkan daftar produk menggunakan kartu interaktif (ID, Nama, Harga terformat Rupiah, tombol Edit & Hapus).
-- **Pencarian Real-Time**: Fitur filter pencarian nama produk secara instan beserta penghitung total produk yang cocok.
-- **Tambah Produk (Modal Pop-up)**: Form modal untuk menambahkan produk baru dengan validasi (nama wajib diisi, harga harus lebih dari 0).
-- **Edit Produk (Modal Pop-up)**: Form modal untuk memperbarui data nama dan harga produk yang dipilih.
-- **Hapus Produk (Modal Konfirmasi Pop-up)**: Dialog konfirmasi penghapusan produk dilengkapi pratinjau data produk sebelum dihapus.
-- **Responsif & Bersih**: Tampilan UI modern dan responsif yang presisi mengikuti panduan slide materi kuliah.
+## 📌 Fitur Utama Tugas 4
 
-## 🛠️ Teknologi yang Digunakan
+1. **Navigasi Multi-Halaman (React Router v7)**
+   - **`AppLayout` dengan `<Outlet />`**: Menggunakan layout bersama dengan `Navbar` konsisten di seluruh halaman anak.
+   - **`NavLink` Aktif**: Indikator menu aktif pada sidebar/navbar (`Dashboard`, `Produk`, `Pengaturan`).
+   - **Dynamic Route (`/products/:id`)**: Membaca parameter ID produk via hook `useParams` untuk menampilkan data detail produk secara dinamis.
+   - **Halaman 404 (`*`)**: Penanganan route tidak dikenal dengan tampilan ramah dan tautan kembali ke Dashboard atau Daftar Produk.
 
-- **React 18** (Functional Components, `useState`, Props & Event Handling)
-- **Vite** (Build tool & development server)
-- **Tailwind CSS** (Utility-first CSS framework)
-- **Lucide React** (Icon UI)
-- **Node.js Test Runner** (`node:test` untuk unit testing otomatis)
+2. **Integrasi Layanan Backend (API ExpressJS + Prisma)**
+   - Mengambil data katalog awal dari endpoint `GET http://localhost:3000/products`.
+   - Perubahan data (Tambah, Edit, Hapus) tersimpan langsung ke database SQLite backend melalui API `POST`, `PUT`, dan `DELETE`.
+   - Dilengkapi *offline fallback* otomatis jika backend sedang tidak aktif.
 
-## 🚀 Cara Menjalankan Project
+3. **Dashboard Statistik (`/`)**
+   - Menghitung ringkasan inventaris: Total Produk, Total Nilai Inventaris, Rata-rata Harga, dan Produk Termahal.
+   - Menyediakan tautan cepat ke detail produk dan katalog.
 
-1. **Clone repository:**
-   ```bash
-   git clone https://github.com/umarhyl/pweb-class-react-task.git
-   cd pweb-class-react-task
-   ```
+4. **Pengaturan Tata Letak (`/settings`)**
+   - Pilihan mode tampilan daftar produk: **Mode Grid (Kartu)** vs **Mode List (Baris)** yang langsung diterapkan di `/products` dan tersimpan di `localStorage`.
+   - Pemantau status konektivitas layanan backend API.
 
-2. **Instal dependensi:**
-   ```bash
-   npm install
-   ```
+5. **Penerapan Atomic Design & Tailwind CSS**
+   - **Atoms**: `Button`, `Badge`
+   - **Molecules**: `SearchBar`, `ProductCard` (mendukung mode Grid dan List)
+   - **Organisms**: `Navbar`, `AddProductModal`, `EditProductModal`, `DeleteProductModal`
+   - **Layouts**: `AppLayout` (Navbar + `<Outlet />`)
 
-3. **Jalankan development server:**
-   ```bash
-   npm run dev
-   ```
-   Buka browser di `http://localhost:5173`.
+---
 
-4. **Jalankan pengujian unit:**
-   ```bash
-   npm test
-   ```
+## 🗺️ Struktur Route Aplikasi
 
-## 📋 Tabel Bukti Pengujian
+| Route Path | Komponen | Keterangan |
+|---|---|---|
+| `/` | `DashboardPage` | Halaman ringkasan metrik statistik produk |
+| `/products` | `ProductsPage` | Halaman utama daftar produk (CRUD & Search) |
+| `/products/:id` | `ProductDetailPage` | Halaman detail produk dinamis berdasarkan parameter ID |
+| `/settings` | `SettingsPage` | Pengaturan mode tampilan (Grid / List) & status API |
+| `*` | `NotFoundPage` | Halaman fallback 404 untuk URL yang tidak terdaftar |
+
+---
+
+## 🚀 Panduan Menjalankan Aplikasi
+
+### 1. Menjalankan Backend (ExpressJS API)
+Buka terminal pada direktori repository backend:
+```bash
+# Masuk ke folder backend
+cd ../express
+
+# Instal dependensi (jika belum)
+npm install
+
+# Inisialisasi data awal database
+npm run seed
+
+# Jalankan server API (port 3000)
+npm start
+```
+Server backend akan aktif di `http://localhost:3000`.
+
+### 2. Menjalankan Frontend (React + Vite)
+Buka terminal pada direktori repository frontend:
+```bash
+# Masuk ke folder react
+cd ../react
+
+# Instal dependensi
+npm install
+
+# Jalankan dev server
+npm run dev
+```
+Buka browser pada alamat `http://localhost:5173`.
+
+### 3. Menjalankan Pengujian Unit Otomatis
+```bash
+npm test
+```
+
+---
+
+## 📋 Tabel Bukti Pengujian Tugas 4
 
 | Skenario | Hasil yang Diharapkan | Hasil Aktual |
 |---|---|---|
-| Membuka halaman utama aplikasi | Menampilkan header, form pencarian, jumlah produk (5 produk), dan daftar kartu produk awal | Sesuai |
-| Mencari produk berdasarkan nama (contoh: "Buku") | Daftar produk terfilter secara realtime hanya menampilkan produk yang sesuai ("Buku Tulis") | Sesuai |
-| Mencari nama produk yang tidak terdaftar | Menampilkan pesan "Tidak ada produk yang sesuai dengan pencarian" | Sesuai |
-| Membuka pop-up Tambah Produk | Modal form tambah produk terbuka dengan field nama produk dan harga | Sesuai |
-| Menambahkan produk baru dengan validasi | Produk baru berhasil ditambahkan ke daftar dan total produk bertambah | Sesuai |
-| Membuka pop-up Edit Produk | Modal form edit terbuka dengan data produk terpilih terisi otomatis | Sesuai |
-| Menyimpan perubahan data produk | Data nama dan harga produk berhasil diperbarui pada kartu | Sesuai |
-| Membuka pop-up konfirmasi Hapus Produk | Dialog konfirmasi hapus terbuka dengan pratinjau ID, nama, dan harga produk | Sesuai |
-| Mengonfirmasi penghapusan produk | Produk terhapus dari daftar dan jumlah produk berkurang | Sesuai |
+| Membuka halaman Dashboard (`/`) | Menampilkan ringkasan statistik (total produk, nilai inventaris, rata-rata) dan daftar ringkas produk | Sesuai |
+| Navigasi antar halaman via Navbar | Berpindah ke `/products` atau `/settings` tanpa reload seluruh halaman (SPA) | Sesuai |
+| Membuka halaman detail produk (`/products/:id`) | Menampilkan informasi lengkap produk sesuai ID pada URL dan tombol kembali | Sesuai |
+| Membuka detail ID produk tidak ada (`/products/999`) | Menampilkan pesan error "Produk Tidak Ditemukan" dengan tautan kembali ke daftar produk | Sesuai |
+| Mengakses URL yang tidak terdaftar (contoh: `/halaman-ngawur`) | Menampilkan halaman 404 dengan pesan informatif dan tombol kembali | Sesuai |
+| Menambahkan produk baru via modal di `/products` | Data tersimpan ke API backend dan langsung muncul pada daftar produk | Sesuai |
+| Mengubah produk via modal Edit | Perubahan nama/harga tersimpan ke API backend dan terupdate di tampilan | Sesuai |
+| Menghapus produk via modal konfirmasi | Data produk terhapus dari backend dan daftar produk terperbarui | Sesuai |
+| Mengubah mode tampilan di `/settings` (Grid / List) | Tata letak produk di `/products` berganti sesuai pilihan dan tersimpan di `localStorage` | Sesuai |
