@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import ProductCard from './components/ProductCard';
+import SearchBar from './components/SearchBar';
 import { initialProducts } from './data/initialProducts';
 
 function App() {
   const [products, setProducts] = useState(initialProducts);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -26,16 +32,36 @@ function App() {
           </button>
         </div>
 
+        {/* Search Bar & Counter */}
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          count={filteredProducts.length}
+        />
+
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onEdit={() => {}}
-              onDelete={() => {}}
-            />
-          ))}
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onEdit={() => {}}
+                onDelete={() => {}}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-200 mt-6">
+            <p className="text-slate-500 text-sm">
+              Tidak ada produk yang sesuai dengan pencarian &quot;{searchTerm}&quot;
+            </p>
+          </div>
+        )}
+
+        {/* Bottom Footer Info */}
+        <div className="mt-8 text-sm text-slate-500">
+          Menampilkan {filteredProducts.length} dari {products.length} produk
         </div>
       </div>
     </div>
