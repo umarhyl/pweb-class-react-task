@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 import ProductCard from './components/ProductCard';
 import SearchBar from './components/SearchBar';
+import AddProductModal from './components/AddProductModal';
 import { initialProducts } from './data/initialProducts';
 
 function App() {
   const [products, setProducts] = useState(initialProducts);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleAddProduct = (newProductData) => {
+    const nextId = products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
+    const newProduct = {
+      id: nextId,
+      ...newProductData,
+    };
+    setProducts([...products, newProduct]);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -26,7 +37,8 @@ function App() {
           </div>
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl shadow-sm transition-colors self-start sm:self-auto"
+            onClick={() => setIsAddModalOpen(true)}
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl shadow-sm transition-colors self-start sm:self-auto cursor-pointer"
           >
             + Tambah Produk
           </button>
@@ -63,6 +75,13 @@ function App() {
         <div className="mt-8 text-sm text-slate-500">
           Menampilkan {filteredProducts.length} dari {products.length} produk
         </div>
+
+        {/* Add Modal */}
+        <AddProductModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onAddProduct={handleAddProduct}
+        />
       </div>
     </div>
   );
